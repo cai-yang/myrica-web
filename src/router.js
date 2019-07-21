@@ -7,7 +7,7 @@ Vue.use(Router)
 const routes = [{
         path: '/',
         name: 'home',
-        component: Home
+        redirect: '/myrica'
     },
     {
         path: '/about',
