@@ -9,6 +9,17 @@
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
 
+window.onload = function() {
+  document.addEventListener("touchstart", function(event) {
+    if (event.touches.length > 1) {
+      event.preventDefault();
+    }
+  });
+  document.addEventListener("gesturestart", function(event) {
+    event.preventDefault();
+  });
+};
+
 export default {
   name: "app",
   components: {
