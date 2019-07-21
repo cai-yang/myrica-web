@@ -5,14 +5,16 @@
       <span>{{sysName}}</span>！欢迎！
     </p>
     <div id="vuex-demo">
-      <p>以下由Vuex实现，可以改变下面这个数字</p>
-      <p>{{pressCount}}</p>
-      <p>也可以联动下面这个框 反正用的都是一个数</p>
       <el-card>
+        <p>以下由Vuex实现</p>
+        <el-divider content-position="center">注意这个数字</el-divider>
+        <p>{{pressCount}}</p>
+        <el-divider content-position="center">可以通过条条改</el-divider>
         <el-row>
-          <el-slider v-model="barCount" show-input input-size="medium"></el-slider>
+          <el-slider v-model="pressCount" show-input :show-tooltip="false" input-size="medium"></el-slider>
         </el-row>
-        <el-row>下面几个按钮也是通过操作状态来改变组件的</el-row>
+        <el-divider content-position="center">也可以用按钮</el-divider>
+
         <el-row>
           <el-button @click="decrement">同步-1</el-button>
           <el-button @click="increment">同步+1</el-button>
@@ -37,20 +39,19 @@ import { Loading } from "element-ui";
 
 export default {
   computed: {
-    //利用mapState暴露store下的状态
-    ...mapState({
-      //可以使用普通的箭头函数
-      sysName: state => state.sysName,
-      pressCount: "count"
-    }),
-    barCount: {
+    pressCount: {
       get() {
-        return this.pressCount;
+        return this.$store.state.myrica.count;
       },
       set(val) {
         this.$store.commit("myrica/count", { count: val });
       }
-    }
+    },
+    //利用mapState暴露store下的状态
+    ...mapState({
+      //可以使用普通的箭头函数
+      sysName: state => state.sysName
+    })
   },
   methods: {
     increment() {
