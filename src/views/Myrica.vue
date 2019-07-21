@@ -14,15 +14,19 @@
           <el-slider v-model="pressCount" show-input :show-tooltip="false" input-size="medium"></el-slider>
         </el-row>
         <el-divider content-position="center">也可以用按钮</el-divider>
-
-        <el-row>
-          <el-button @click="decrement">同步-1</el-button>
-          <el-button @click="increment">同步+1</el-button>
-        </el-row>
-        <el-row>
-          <el-button @click="decrementAsync">异步-1</el-button>
-          <el-button @click="incrementAsync">异步+1</el-button>
-        </el-row>
+        <el-container>
+          <el-main>
+            <el-input v-model="mathStep" placeholder></el-input>
+            <el-row>
+              <el-button @click="decrement">同步-{{mathStep}}</el-button>
+              <el-button @click="increment">同步+{{mathStep}}</el-button>
+            </el-row>
+            <el-row>
+              <el-button @click="decrementAsync">异步-{{mathStep}}</el-button>
+              <el-button @click="incrementAsync">异步+{{mathStep}}</el-button>
+            </el-row>
+          </el-main>
+        </el-container>
       </el-card>
     </div>
   </div>
@@ -47,18 +51,27 @@ export default {
         this.$store.commit("myrica/count", { count: val });
       }
     },
+    mathStep: {
+      get() {
+        return this.$store.state.myrica.mathStep;
+      },
+      set(val) {
+        this.$store.commit("myrica/step", { step: val });
+      }
+    },
     //利用mapState暴露store下的状态
     ...mapState({
       //可以使用普通的箭头函数
       sysName: state => state.sysName
+      //也可以使用别名+字符串
     })
   },
   methods: {
     increment() {
-      this.$store.commit("myrica/increment");
+      this.$store.commit("myrica/increment", { step: this.mathStep });
     },
     decrement() {
-      this.$store.commit("myrica/decrement");
+      this.$store.commit("myrica/decrement", { step: this.mathStep });
     },
     decrementAsync() {
       let loadingInstance = Loading.service({
@@ -68,9 +81,11 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
       //可以直接调用根组件注入的store来分发Action
-      this.$store.dispatch("myrica/decrementAsync").then(function() {
-        loadingInstance.close();
-      });
+      this.$store
+        .dispatch("myrica/decrementAsync", { step: this.mathStep })
+        .then(function() {
+          loadingInstance.close();
+        });
     },
     //也可以通过mapActions来映射Action
     ...mapActions({
@@ -85,7 +100,7 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
       //使用映射的method来分发action，注意作用域
-      this.incrementAction().then(function() {
+      this.incrementAction({ step: this.mathStep }).then(function() {
         loadingInstance.close();
       });
     }
