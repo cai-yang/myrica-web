@@ -13,21 +13,28 @@
       </div>
       <div style="margin-top:15px">
         <el-button @click="decrementAsync">异步-1</el-button>
-        <el-button @click="incrementAsync">异步+1</el-button>
+        <el-button @click="incrementAsync">异步+sdf1</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+//不使用全局辅助函数
+//import { mapState, mapActions } from "vuex";
+//使用createNamespacedHelper可以创建基于单独命名空间的辅助函数
+import { createNamespacedHelpers } from "vuex";
+const { mapState, mapActions } = createNamespacedHelpers("myrica");
+
 import { Loading } from "element-ui";
 
 export default {
   computed: {
+    //利用mapState暴露store下的状态
     ...mapState({
-      sysName: state => state.myrica.sysName,
-      pressCount: state => state.myrica.count
+      //可以使用普通的箭头函数
+      sysName: state => state.sysName,
+      pressCount: "count"
     })
   },
   methods: {
@@ -52,7 +59,7 @@ export default {
     //也可以通过mapActions来映射Action
     ...mapActions({
       //可以使用别名映射
-      incrementAction: "myrica/incrementAsync"
+      incrementAction: "incrementAsync"
     }),
     incrementAsync() {
       let loadingInstance = Loading.service({
