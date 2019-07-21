@@ -9,6 +9,9 @@ const mutations = {
     },
     decrement(state) {
         state.count--;
+    },
+    count(state, payload) {
+        state.count = payload.count;
     }
 }
 

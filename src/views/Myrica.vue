@@ -1,20 +1,27 @@
 <template>
-  <div id="myrica">
+  <div id="myrica" type="flex">
     <p>
       这里是
       <span>{{sysName}}</span>！欢迎！
     </p>
-    <div>
+    <div id="vuex-demo">
       <p>以下由Vuex实现，可以改变下面这个数字</p>
       <p>{{pressCount}}</p>
-      <div>
-        <el-button @click="decrement">同步-1</el-button>
-        <el-button @click="increment">同步+1</el-button>
-      </div>
-      <div style="margin-top:15px">
-        <el-button @click="decrementAsync">异步-1</el-button>
-        <el-button @click="incrementAsync">异步+sdf1</el-button>
-      </div>
+      <p>也可以联动下面这个框 反正用的都是一个数</p>
+      <el-card>
+        <el-row>
+          <el-slider v-model="barCount" show-input input-size="medium"></el-slider>
+        </el-row>
+        <el-row>下面几个按钮也是通过操作状态来改变组件的</el-row>
+        <el-row>
+          <el-button @click="decrement">同步-1</el-button>
+          <el-button @click="increment">同步+1</el-button>
+        </el-row>
+        <el-row>
+          <el-button @click="decrementAsync">异步-1</el-button>
+          <el-button @click="incrementAsync">异步+1</el-button>
+        </el-row>
+      </el-card>
     </div>
   </div>
 </template>
@@ -35,7 +42,15 @@ export default {
       //可以使用普通的箭头函数
       sysName: state => state.sysName,
       pressCount: "count"
-    })
+    }),
+    barCount: {
+      get() {
+        return this.pressCount;
+      },
+      set(val) {
+        this.$store.commit("myrica/count", { count: val });
+      }
+    }
   },
   methods: {
     increment() {
@@ -76,3 +91,17 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.vuex-demo {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.el-row {
+  margin-top: 15px;
+}
+</style>
